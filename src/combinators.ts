@@ -78,56 +78,55 @@ export function sequence(...combinators: Combinator[]): Combinator {
 
 // A use case for sequence
 
-export const string = (s: string) => sequence(...s.split('').map(char));
-
+export const string = (s: string) => sequence(...s.split("").map(char));
 
 /**
  * Return success if the combinator matches at least n times.
  */
 export function nOrMore(n: number, combinator: Combinator): Combinator {
-	return (str: string) => {
-		let matches = 0;
-		let rest = str;
-		let value = "";
+  return (str: string) => {
+    let matches = 0;
+    let rest = str;
+    let value = "";
 
-		while (1) {
-			const result = combinator(rest);
-			if (result.success) {
-				matches++;
-				value += result.value;
-				rest = result.rest;
-				continue;
-			}
-			break;
-		}
+    while (1) {
+      const result = combinator(rest);
+      if (result.success) {
+        matches++;
+        value += result.value;
+        rest = result.rest;
+        continue;
+      }
+      break;
+    }
 
-		if (matches >= n) {
-			return {
-				success: true,
-				value,
-				rest
-			};
-		}
+    if (matches >= n) {
+      return {
+        success: true,
+        value,
+        rest,
+      };
+    }
 
-		return {
-			success: false
-		};
-	};
+    return {
+      success: false,
+    };
+  };
 }
 
 export function optional(c: Combinator): Combinator {
-	return (str: string) => {
-		const result = c(str);
-		if (result.success) {
-			return result;
-		}
+  return (str: string) => {
+    const result = c(str);
+    if (result.success) {
+      return result;
+    }
 
-		return {
-			success: true,
-			value: "",
-			rest: str
-		};
-	};
+    return {
+      success: true,
+      value: "",
+      rest: str,
+    };
+  };
 }
 
 // Combining them
